@@ -1,7 +1,7 @@
 """Video demo KHÔNG lồng tiếng: người xem hiểu nhờ
   - thẻ tiêu đề chia chương,
   - vùng đang nói tới được "rọi đèn" (phần còn lại tối đi, viền vàng),
-  - phụ đề ngắn, hiển thị đủ lâu theo độ dài chữ (~13 ký tự/giây).
+  - phụ đề ngắn, hiển thị đủ lâu theo độ dài chữ (~17 ký tự/giây; muốn xem kỹ thì tạm dừng video).
 Chạy: python3 video/make_silent_video.py  →  video/demo_khong_tieng.mp4"""
 import json
 import subprocess
@@ -34,7 +34,7 @@ SCENES = [
   ("Mã giả tô vàng dòng đang chạy, nhật ký bên dưới ghi lại từng phép tính.",
    "", "#vizCard", "document.getElementById('code')", 0),
   ("Bấm ▶ Chạy để xem toàn bộ quá trình. Có thể lùi/tiến từng bước bằng phím ← →.",
-   "document.getElementById('speed').value=6; demo.go(5); demo.play()", "#vizCard", "document.getElementById('board').closest('div').parentElement", 2.5),
+   "document.getElementById('speed').value=6; demo.go(5); demo.play()", "#vizCard", "document.getElementById('board').closest('div').parentElement", 1.6),
   ("Kết quả: dp[4][4] = 3 → có 3 đường đi an toàn.",
    "demo.stop(); demo.go(demo.steps()-1)", "#vizCard", "document.querySelector('#board .cell[data-i=\"3\"][data-j=\"3\"]')", 0),
   ("Chế độ mảng 1 chiều = đúng code nộp WeCode: dp[j] cũ là ô phía trên, dp[j-1] vừa cập nhật là ô bên trái ⇒ bộ nhớ chỉ O(n).",
@@ -67,6 +67,13 @@ OVERLAY_CSS = """
 #card{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
   background:radial-gradient(circle at 50% 40%,#1d2a47,#0b0f17 70%);color:#fff;font-family:'Be Vietnam Pro',sans-serif;
   opacity:0;transition:opacity .5s;pointer-events:none;padding-bottom:86px;text-align:center}
+#ptr{position:fixed;z-index:45;width:46px;height:46px;pointer-events:none;opacity:0;
+  transition:left .7s cubic-bezier(.4,0,.2,1),top .7s cubic-bezier(.4,0,.2,1),opacity .3s;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}
+#ptr svg{animation:bob 1.1s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(0,0)}50%{transform:translate(-5px,-5px)}}
+.ripple{position:fixed;z-index:44;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;border:3px solid #fbbf24;pointer-events:none;
+  animation:rip .7s ease-out forwards}
+@keyframes rip{from{transform:scale(.4);opacity:1}to{transform:scale(3.6);opacity:0}}
 #card h1{font-size:54px;margin:0;letter-spacing:-.01em}
 #card p{font-size:24px;margin:0;color:#b9c6e4;max-width:1000px}
 """
@@ -75,22 +82,40 @@ OVERLAY_JS = """
 (() => {
   const spot = document.createElement('div'); spot.id = 'spot'; document.body.appendChild(spot);
   const card = document.createElement('div'); card.id = 'card'; card.innerHTML = '<h1></h1><p></p>'; document.body.appendChild(card);
-  let target = null;
+  const ptr = document.createElement('div'); ptr.id = 'ptr';
+  ptr.innerHTML = '<svg viewBox="0 0 24 24" width="46" height="46"><path d="M4 2l15 11.2-6.6 1.1 3.9 7.2-2.9 1.5-3.9-7.3L4 20z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+  document.body.appendChild(ptr);
+  let target = null, tapT = null;
+  const VIS_H = innerHeight - 86;  // vùng thực sự được quay
+  function aim(r) {  // mũi chuột chỉ vào gần tâm vùng (giới hạn trong khung hình)
+    const x = Math.min(innerWidth - 60, Math.max(20, r.left + Math.min(r.width * 0.5, r.width - 20)));
+    const y = Math.min(VIS_H - 150, Math.max(20, r.top + Math.min(r.height * 0.5, r.height - 20)));
+    return [x, y];
+  }
   (function loop() {
     if (target && document.contains(target)) {
       const r = target.getBoundingClientRect(), pad = 8;
       Object.assign(spot.style, {left: r.left - pad + 'px', top: r.top - pad + 'px', width: r.width + 2 * pad + 'px', height: r.height + 2 * pad + 'px', opacity: 1});
-    } else spot.style.opacity = 0;
+      const [x, y] = aim(r);
+      ptr.style.left = x + 'px'; ptr.style.top = y + 'px'; ptr.style.opacity = 1;
+    } else { spot.style.opacity = 0; ptr.style.opacity = 0; }
     requestAnimationFrame(loop);
   })();
-  window.spotOn = el => { target = el; };
+  window.spotOn = el => {
+    target = el; clearTimeout(tapT);
+    if (el) tapT = setTimeout(() => {  // tới nơi thì "chạm" một cái
+      const [x, y] = aim(el.getBoundingClientRect());
+      const d = document.createElement('div'); d.className = 'ripple'; d.style.left = x + 2 + 'px'; d.style.top = y + 2 + 'px';
+      document.body.appendChild(d); setTimeout(() => d.remove(), 800);
+    }, 750);
+  };
   window.showCard = (t, s) => { card.querySelector('h1').textContent = t; card.querySelector('p').textContent = s; card.style.opacity = t ? 1 : 0; };
 })();
 """
 
 
 def read_time(text):
-  return max(3.5, len(text) / 13 + 1.5)
+  return max(2.6, len(text) / 17 + 0.9)
 
 
 def main():
@@ -111,9 +136,9 @@ def main():
       if sc[0] == "card":
         page.evaluate("spotOn(null); demo.caption('')")
         page.evaluate(f"showCard({json.dumps(sc[1])}, {json.dumps(sc[2])})")
-        page.wait_for_timeout(int(max(2.6, len(sc[2]) / 18 + 1.6) * 1000))
+        page.wait_for_timeout(int(max(1.9, len(sc[2]) / 24 + 1.1) * 1000))
         page.evaluate("showCard('', '')")
-        page.wait_for_timeout(500)
+        page.wait_for_timeout(350)
         continue
       text, js, scroll, spot, extra = sc
       page.evaluate("spotOn(null); demo.caption('')")
@@ -123,7 +148,7 @@ def main():
         page.evaluate("scrollTo({top:0,behavior:'smooth'})")
       else:
         page.evaluate(f"document.querySelector({json.dumps(scroll)}).scrollIntoView({{behavior:'smooth',block:'start'}})")
-      page.wait_for_timeout(600)
+      page.wait_for_timeout(450)
       page.evaluate(f"spotOn({spot})")
       page.evaluate(f"demo.caption({json.dumps(text)})")
       page.wait_for_timeout(int((read_time(text) + extra) * 1000))
