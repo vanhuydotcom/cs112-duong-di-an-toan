@@ -78,7 +78,7 @@ Bài toán chọn: & ``Đường đi an toàn'' (WeCode -- nhóm Dynamic Program
 Theo yêu cầu cô giao ở Buổi 8 (đầu buổi, khoảng phút 12--22; nhắc lại cuối buổi), sinh viên chọn một bài toán đã học hoặc đã làm trên WeCode và xây dựng một \textbf{demo có giao diện}: có ô nhập dữ liệu, khung hiển thị kết quả, minh họa trực quan quá trình giải; được phép dùng AI. Sản phẩm nộp gồm ba phần:
 \begin{enumerate}
   \item \textbf{Source code} của sản phẩm (thư mục \texttt{app/}, \texttt{solution/}, \texttt{tests/}).
-  \item \textbf{Video} quay quá trình chạy thử (\texttt{video/demo.mp4}).
+  \item \textbf{Video} quay quá trình chạy thử (\texttt{video/demo\_HoaiMy.mp4}).
   \item \textbf{Report} (tài liệu này) tường thuật lại toàn bộ quy trình: tìm hiểu, dùng AI nào, prompt ra sao, thuật toán do ai đề xuất và kiểm chứng thế nào.
 \end{enumerate}
 Em chọn bài \textbf{Đường đi an toàn} vì bài có lời giải quy hoạch động (QHĐ) ngắn gọn nhưng rất phù hợp để minh họa: mỗi ô của bảng là một bài toán con, và việc ``điền bảng'' có thể diễn ra trực tiếp trên bản đồ. Mục tiêu đặt ra không chỉ là cho ra đáp án, mà là giúp \textbf{người mới học hiểu được vì sao công thức truy hồi đúng}.
@@ -175,6 +175,7 @@ Ngoài ra bộ test còn kiểm tra 7 input sai (rỗng, $n$ không phải số,
 \begin{itemize}
   \item Chạy: mở \texttt{app/index.html} bằng trình duyệt, hoặc \texttt{python3 -m http.server -d app} rồi vào \texttt{http://localhost:8000}.
   \item Kiểm thử: \texttt{python3 tests/run\_tests.py}.
+  \item \textbf{Bản online:} \url{https://vanhuydotcom.github.io/cs112-duong-di-an-toan/} -- mã nguồn: \url{https://github.com/vanhuydotcom/cs112-duong-di-an-toan}.
 \end{itemize}
 
 \subsection{Các chức năng chính}
@@ -217,14 +218,14 @@ Ngoài ra bộ test còn kiểm tra 7 input sai (rỗng, $n$ không phải số,
 \end{figure}
 
 \subsection{Video demo}
-Video \texttt{video/demo.mp4} (khoảng 3 phút, có thuyết minh tiếng Việt và phụ đề) được \textbf{tạo tự động} bằng script \texttt{video/make\_video.py}: Playwright điều khiển trình duyệt Chrome theo kịch bản 16 cảnh và ghi hình; lời thuyết minh được đọc bằng công cụ chuyển văn bản thành giọng nói \texttt{say} của macOS (giọng ``Linh''); ffmpeg ghép hình và tiếng. Cách làm này giúp video có thể tạo lại y hệt bất cứ lúc nào sau khi sửa giao diện.
+Video \texttt{video/demo\_HoaiMy.mp4} hoặc \texttt{demo\_NamMinh.mp4} (khoảng 3 phút, có thuyết minh tiếng Việt và phụ đề) được \textbf{tạo tự động} bằng script \texttt{video/make\_video.py}: Playwright điều khiển trình duyệt Chrome theo kịch bản 16 cảnh và ghi hình; lời thuyết minh được đọc bằng giọng neural tiếng Việt của Microsoft qua thư viện \texttt{edge-tts} (bản đầu dùng giọng ``Linh'' của macOS nhưng nghe không tự nhiên nên đã thay); ffmpeg ghép hình và tiếng. Cách làm này giúp video có thể tạo lại y hệt bất cứ lúc nào sau khi sửa giao diện.
 
 % =====================================================
 \section{Quy trình thực hiện và cách sử dụng AI}\label{sec:quytrinh}
 \subsection{Công cụ}
 \begin{itemize}
   \item \textbf{AI:} Claude Code (mô hình Claude Opus 5.5 của Anthropic), chạy trong ứng dụng Claude desktop, có quyền đọc/ghi file trong thư mục môn học và chạy lệnh trên máy.
-  \item \textbf{Công cụ khác:} Python 3, Node.js, Playwright + Google Chrome (chụp ảnh, quay video), ffmpeg, \texttt{say} (macOS), Tectonic (biên dịch LaTeX).
+  \item \textbf{Công cụ khác:} Python 3, Node.js, Playwright + Google Chrome (chụp ảnh, quay video), ffmpeg, \texttt{edge-tts} (giọng đọc), Tectonic, GitHub Pages (đăng demo) (biên dịch LaTeX).
 \end{itemize}
 
 \subsection{Các bước và prompt đã dùng}
@@ -240,7 +241,9 @@ Dán bản tóm tắt yêu cầu em tự viết lại, hỏi \textit{``như vậ
 \textit{``\dots dựa vào những dữ liệu trên, hãy đưa ra những câu hỏi để giúp bạn có thể làm bài tập này.''} &
 Đặt 17 câu hỏi về: chọn bài, công nghệ, mức độ trực quan, report, video, hình thức nộp.\\\midrule
 Trả lời 17 câu hỏi: dán đề bài ``Đường đi an toàn'' và hình minh họa, dán lời giải Python, chọn web (JS/Python), có deploy, minh họa từng bước cho người mới học, nhập tay + sinh ngẫu nhiên + validate đầy đủ, song ngữ, report LaTeX ghi trung thực, \textit{``AI đề xuất rồi bạn kiểm chứng''}, AI tự làm video, làm cá nhân, nộp trong tuần. &
-Viết lõi thuật toán JS; viết bộ test đối chiếu vét cạn (mục 4) và chạy; xây giao diện web; tự mở trong trình duyệt để kiểm tra (desktop, điện thoại, tiếng Anh, lưới $1000\times1000$, input lỗi) và sửa các lỗi hiển thị phát hiện được; viết script quay video, phát hiện và khắc phục lỗi video bị hụt khung ở đáy; chụp ảnh và viết report này.\\
+Viết lõi thuật toán JS; viết bộ test đối chiếu vét cạn (mục 4) và chạy; xây giao diện web; tự mở trong trình duyệt để kiểm tra (desktop, điện thoại, tiếng Anh, lưới $1000\times1000$, input lỗi) và sửa các lỗi hiển thị phát hiện được; viết script quay video, phát hiện và khắc phục lỗi video bị hụt khung ở đáy; chụp ảnh và viết report này.\\\midrule
+\textit{``deploy github nhé, còn video lòng tiếng nghe kinh quá, có cách khác không''} &
+Tạo repo public trên GitHub và bật GitHub Pages; đề xuất 3 cách thay giọng đọc, em chọn giọng AI neural; AI chuyển script video sang \texttt{edge-tts} và tạo hai bản giọng nữ/nam để em chọn.\\
 \bottomrule
 \end{longtable}
 
@@ -270,7 +273,7 @@ Viết lõi thuật toán JS; viết bộ test đối chiếu vét cạn (mục 
 % =====================================================
 \section{Đánh giá và hướng phát triển}
 \textbf{Đã đạt:} đủ ba sản phẩm nộp; giao diện có nhập liệu, kiểm tra input, minh họa từng bước, giải thích công thức, chạy được tới $n=1000$; lời giải được kiểm chứng.\\
-\textbf{Hạn chế:} hoạt hình từng ô chỉ áp dụng cho $n\le16$ để lưới còn đọc được; bản đồ nhiệt dùng số thực nên chỉ mang tính minh họa; giọng thuyết minh là giọng máy.\\
+\textbf{Hạn chế:} hoạt hình từng ô chỉ áp dụng cho $n\le16$ để lưới còn đọc được; bản đồ nhiệt dùng số thực nên chỉ mang tính minh họa; giọng thuyết minh là giọng tổng hợp (AI) chứ không phải giọng thật.\\
 \textbf{Hướng phát triển:} so sánh trực quan với cách vét cạn (đếm số lời gọi đệ quy) để thấy rõ lợi ích của QHĐ; mở rộng cho phép đi theo 3 hướng, hoặc tìm đường an toàn có chi phí nhỏ nhất.
 
 % =====================================================
@@ -284,7 +287,7 @@ DoAn_DuongDiAnToan/
   app/index.html, app/core.js   giao dien web + loi thuat toan
   solution/safe_path.py         loi giai nop WeCode
   tests/run_tests.py            doi chieu vet can, test lon, test validate
-  video/demo.mp4                video demo (co thuyet minh)
+  video/demo_*.mp4              video demo (co thuyet minh)
   video/make_video.py           script tao video tu dong
   report/report.tex, report.pdf bao cao nay
 \end{lstlisting}

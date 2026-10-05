@@ -1,9 +1,10 @@
-"""Tự động quay video demo: Playwright điều khiển Chrome theo kịch bản, macOS `say` (giọng Linh)
+"""Tự động quay video demo: Playwright điều khiển Chrome theo kịch bản, edge-tts (giọng neural tiếng Việt)
 đọc thuyết minh, ffmpeg ghép hình + tiếng. Chạy: python3 video/make_video.py  →  video/demo.mp4"""
 import functools
 import http.server
 import json
 import subprocess
+import sys
 import threading
 import time
 from pathlib import Path
@@ -16,6 +17,8 @@ TMP = HERE / "_build"
 TMP.mkdir(exist_ok=True)
 PORT = 8799
 W, H = 1366, 860
+# giọng đọc: vi-VN-HoaiMyNeural (nữ) hoặc vi-VN-NamMinhNeural (nam); đổi bằng: python3 video/make_video.py NamMinh
+VOICE = f"vi-VN-{sys.argv[1] if len(sys.argv) > 1 else 'HoaiMy'}Neural"
 
 # (lời thuyết minh, hành động JS trước khi đọc, cách cuộn tới phần tử)
 SCENES = [
@@ -62,11 +65,19 @@ def serve():
 
 
 def tts(i, text):
-  aiff = TMP / f"s{i:02d}.aiff"
-  subprocess.run(["say", "-v", "Linh", "-r", "175", "-o", str(aiff), text], check=True)
-  dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(aiff)],
+  """Thuyết minh bằng giọng neural tiếng Việt của Microsoft (edge-tts); thử lại khi mạng chập chờn."""
+  mp3 = TMP / f"s{i:02d}.mp3"
+  for attempt in range(4):
+    r = subprocess.run([sys.executable, "-m", "edge_tts", "-v", VOICE, "--rate", "+4%", "-t", text, "--write-media", str(mp3)],
+                       capture_output=True, text=True)
+    if r.returncode == 0 and mp3.exists() and mp3.stat().st_size > 1000:
+      break
+    time.sleep(2 + attempt * 2)
+  else:
+    raise RuntimeError(f"edge-tts lỗi ở cảnh {i}: {r.stderr[-300:]}")
+  dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(mp3)],
                              capture_output=True, text=True, check=True).stdout)
-  return aiff, dur
+  return mp3, dur
 
 
 def main():
@@ -114,7 +125,7 @@ def main():
   mix = "".join(f"[a{k}]" for k in range(len(audio)))
   filters.append(f"[0:v]crop={W}:{real_h}:0:0[vout]")
   filters.append(f"{mix}amix=inputs={len(audio)}:normalize=0,atrim=0:{total:.2f}[aout]")
-  out = HERE / "demo.mp4"
+  out = HERE / f"demo_{VOICE.split('-')[2].replace('Neural', '')}.mp4"
   subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filters),
                   "-map", "[vout]", "-map", "[aout]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "22",
                   "-c:a", "aac", "-b:a", "128k", "-shortest", str(out)], check=True)
