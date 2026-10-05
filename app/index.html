@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đường Đi An Toàn</title>
+<meta name="description" content="Trực quan hóa quy hoạch động: đếm số đường đi an toàn trên lưới n×n (CS112 – UIT)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7fb; --panel:#ffffff; --ink:#1b2333; --muted:#5d6779; --line:#e2e6ee;
+  --accent:#2156d9; --accent-soft:#e6eeff; --ok:#16875a; --ok-soft:#dff5ea;
+  --warn:#c2410c; --warn-soft:#fff0e6; --bad:#c62f2f; --bad-soft:#fde8e8;
+  --cur:#f5b301; --cur-soft:#fff6d6; --up:#7c3aed; --up-soft:#efe6ff; --left:#0e8fa3; --left-soft:#ddf6fa;
+  --cell-empty:#ffffff; --cell-done:#f2f6ff; --cell-block:#fbe4e4; --path:#16a34a;
+  --shadow:0 1px 2px rgba(20,30,60,.06),0 4px 16px rgba(20,30,60,.06);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f141c; --panel:#171e2a; --ink:#e6eaf2; --muted:#9aa5b8; --line:#2a3445;
+  --accent:#6d9bff; --accent-soft:#1d2a47; --ok:#4ade80; --ok-soft:#163626;
+  --warn:#fb923c; --warn-soft:#3a2414; --bad:#f87171; --bad-soft:#3a1c1c;
+  --cur:#fbbf24; --cur-soft:#3a3014; --up:#b794ff; --up-soft:#2c2146; --left:#38c6db; --left-soft:#143640;
+  --cell-empty:#1b2331; --cell-done:#1d2a42; --cell-block:#3a1f24; --path:#4ade80;
+  --shadow:none;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f141c; --panel:#171e2a; --ink:#e6eaf2; --muted:#9aa5b8; --line:#2a3445;
+  --accent:#6d9bff; --accent-soft:#1d2a47; --ok:#4ade80; --ok-soft:#163626;
+  --warn:#fb923c; --warn-soft:#3a2414; --bad:#f87171; --bad-soft:#3a1c1c;
+  --cur:#fbbf24; --cur-soft:#3a3014; --up:#b794ff; --up-soft:#2c2146; --left:#38c6db; --left-soft:#143640;
+  --cell-empty:#1b2331; --cell-done:#1d2a42; --cell-block:#3a1f24; --path:#4ade80;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 "Be Vietnam Pro",system-ui,sans-serif}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.wrap{max-width:1240px;margin:0 auto;padding:16px}
+header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+header.top h1{font-size:22px;margin:0;letter-spacing:-.01em}
+header.top .sub{color:var(--muted);font-size:13px}
+header.top .sp{flex:1}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;color:var(--muted);padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.seg button.on{background:var(--accent);color:#fff}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px;min-width:0}
+.card h2{font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.card h2 .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:13px}
+.grid2{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:14px}
+@media (max-width:900px){.grid2{grid-template-columns:1fr}}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.problem p{margin:.35em 0}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:600}
+textarea{width:100%;min-height:150px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);color:var(--ink);font:13px/1.45 "JetBrains Mono",monospace}
+input[type=number]{width:72px;border:1px solid var(--line);border-radius:8px;padding:5px 6px;background:var(--bg);color:var(--ink);font:inherit}
+input[type=range]{accent-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.icon{width:38px;justify-content:center;padding:7px 0}
+.msg{border-radius:10px;padding:8px 12px;margin-top:8px;font-size:14px}
+.msg.err{background:var(--bad-soft);color:var(--bad)}
+.msg.ok{background:var(--ok-soft);color:var(--ok)}
+.msg.warn{background:var(--warn-soft);color:var(--warn)}
+.msg ul{margin:4px 0 0;padding-left:18px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.sw{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid var(--line)}
+/* lưới */
+.board-wrap{overflow:auto;padding:4px 0 2px}
+.board{display:grid;gap:4px;margin:0 auto;width:max-content}
+.cell{position:relative;width:var(--cs);height:var(--cs);border-radius:8px;background:var(--cell-empty);border:1.5px solid var(--line);display:grid;place-items:center;font:600 var(--fs)/1 "JetBrains Mono",monospace;cursor:pointer;transition:background .2s,border-color .2s,transform .2s;user-select:none}
+.cell .val{max-width:100%;overflow:hidden;text-overflow:ellipsis;padding:0 2px}
+.cell .ico{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:calc(var(--cs)*.36);line-height:1}
+.cell.has-ico:not(.done) .ico{top:50%;transform:translate(-50%,-50%);font-size:calc(var(--cs)*.46)}
+.cell.block{background:var(--cell-block);border-color:color-mix(in srgb,var(--bad) 35%,var(--line))}
+.cell.done{background:var(--cell-done)}
+.cell.zero .val{color:var(--muted);font-weight:400}
+.cell.cur{border-color:var(--cur);background:var(--cur-soft);transform:scale(1.07);z-index:2;box-shadow:0 0 0 3px color-mix(in srgb,var(--cur) 35%,transparent)}
+.cell.src-up{border-color:var(--up);background:var(--up-soft)}
+.cell.src-left{border-color:var(--left);background:var(--left-soft)}
+.cell.onpath{outline:3px solid var(--path);outline-offset:-3px}
+.cell.useless{opacity:.45}
+.cell .tag{position:absolute;top:2px;left:4px;font:500 9px/1 "Be Vietnam Pro",sans-serif;color:var(--muted)}
+.cell.has-ico .val{position:relative;top:calc(var(--cs)*.2);font-size:calc(var(--fs)*.85)}
+.coord{font:11px "JetBrains Mono",monospace;color:var(--muted);display:grid;place-items:center}
+.arrow{position:absolute;font-size:15px;font-weight:700;pointer-events:none}
+.arrow.a-up{top:-13px;left:50%;transform:translateX(-50%);color:var(--up)}
+.arrow.a-left{left:-13px;top:50%;transform:translateY(-50%);color:var(--left)}
+.controls{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;margin-top:12px}
+.controls .speed{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-left:8px}
+.progress{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:10px}
+.progress>div{height:100%;background:var(--accent);width:0;transition:width .15s}
+/* giải thích */
+.explain{min-height:118px;border-radius:12px;padding:12px 14px;background:var(--bg);border:1px solid var(--line)}
+.explain .head{font-weight:600;margin-bottom:4px}
+.formula{font:14px/1.7 "JetBrains Mono",monospace;margin-top:6px;overflow-x:auto;white-space:nowrap}
+.formula .u{color:var(--up);font-weight:600}.formula .l{color:var(--left);font-weight:600}.formula .r{color:var(--accent);font-weight:700}
+.code{font:12.5px/1.6 "JetBrains Mono",monospace;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 0;overflow-x:auto}
+.code div{padding:0 12px;white-space:pre}
+.code div.hl{background:var(--cur-soft);box-shadow:inset 3px 0 0 var(--cur)}
+.code .ln{color:var(--muted);display:inline-block;width:22px}
+.arr{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.arr .slot{min-width:48px;padding:6px 4px;text-align:center;border-radius:8px;border:1.5px solid var(--line);background:var(--panel);font:600 12.5px "JetBrains Mono",monospace}
+.arr .slot small{display:block;font:400 10px "Be Vietnam Pro",sans-serif;color:var(--muted)}
+.arr .slot.cur{border-color:var(--cur);background:var(--cur-soft)}
+.arr .slot.lft{border-color:var(--left);background:var(--left-soft)}
+.result{display:flex;flex-wrap:wrap;gap:12px;align-items:stretch}
+.stat{flex:1 1 160px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg);min-width:0}
+.stat .k{font-size:12px;color:var(--muted)}
+.stat .v{font:700 22px/1.3 "JetBrains Mono",monospace;overflow-wrap:anywhere}
+.stat .v.sm{font-size:14px;font-weight:500}
+details{margin-top:8px}
+summary{cursor:pointer;color:var(--accent);font-weight:500}
+.log{max-height:150px;overflow:auto;font:12px/1.6 "JetBrains Mono",monospace;color:var(--muted);margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+.log div.now{color:var(--ink);font-weight:600}
+canvas#heat{max-width:100%;image-rendering:pixelated;border-radius:8px;border:1px solid var(--line);display:block;margin:0 auto}
+[hidden]{display:none!important}
+.tabs{display:flex;margin-bottom:8px;max-width:100%}
+.tabs button{flex:1 1 0;white-space:normal}
+.grid2>div{min-width:0}
+@media (max-width:520px){.wrap{padding:12px}.card{padding:12px}.controls .speed{margin-left:0}}
+.hint{font-size:12.5px;color:var(--muted)}
+kbd{font:11px "JetBrains Mono",monospace;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 4px;background:var(--panel)}
+footer{color:var(--muted);font-size:12.5px;text-align:center;padding:8px 0 24px}
+#caption{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);max-width:min(920px,92vw);background:rgba(10,14,22,.86);color:#fff;padding:10px 18px;border-radius:12px;font-size:19px;line-height:1.45;text-align:center;z-index:50;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1 data-i18n="title">Đường đi an toàn</h1>
+      <div class="sub" data-i18n="subtitle">Trực quan hóa Quy hoạch động · CS112 – Phân tích &amp; Thiết kế thuật toán · UIT</div>
+    </div>
+    <div class="sp"></div>
+    <div class="seg" id="langSeg"><button data-lang="vi" class="on">Tiếng Việt</button><button data-lang="en">English</button></div>
+    <div class="seg" id="themeSeg"><button data-theme="auto" class="on">Auto</button><button data-theme="light">☀</button><button data-theme="dark">☾</button></div>
+  </header>
+
+  <div class="grid2">
+    <!-- 1. Bài toán -->
+    <section class="card problem">
+      <h2><span class="num">1</span><span data-i18n="h1">Bài toán</span></h2>
+      <p data-i18n-html="story"></p>
+      <p data-i18n-html="task"></p>
+      <div class="row small">
+        <span class="pill">Input</span><span data-i18n-html="inFmt"></span>
+      </div>
+      <div class="row small">
+        <span class="pill">Output</span><span data-i18n-html="outFmt"></span>
+      </div>
+    </section>
+
+    <!-- 2. Nhập dữ liệu -->
+    <section class="card">
+      <h2><span class="num">2</span><span data-i18n="h2">Nhập dữ liệu</span></h2>
+      <div class="row">
+        <button class="btn" data-preset="statement" data-i18n="preStatement">Ví dụ trong đề</button>
+        <button class="btn" data-preset="open" data-i18n="preOpen">Không có chốt</button>
+        <button class="btn" data-preset="wall" data-i18n="preWall">Bị chặn hết</button>
+        <button class="btn" data-preset="start" data-i18n="preStart">Chốt ngay KTX</button>
+      </div>
+      <textarea id="input" spellcheck="false" aria-label="input"></textarea>
+      <div class="row small">
+        <span data-i18n="rndLabel">Sinh ngẫu nhiên:</span>
+        n = <input type="number" id="rn" min="1" max="1000" value="7">
+        <span data-i18n="density">mật độ chốt</span>
+        <input type="range" id="rd" min="0" max="60" value="20"><span id="rdv" class="mono">20%</span>
+        <label><input type="checkbox" id="rkeep" checked> <span data-i18n="keepEnds">giữ trống KTX &amp; UIT</span></label>
+        <button class="btn" id="btnRandom" data-i18n="btnRandom">🎲 Sinh</button>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="btnLoad" data-i18n="btnLoad">✔ Kiểm tra &amp; nạp</button>
+        <span class="hint" data-i18n="editHint">Mẹo: bấm vào một ô trên lưới để bật/tắt chốt CSGT.</span>
+      </div>
+      <div id="msg"></div>
+    </section>
+  </div>
+
+  <!-- 3. Trực quan hóa -->
+  <section class="card" id="vizCard">
+    <h2><span class="num">3</span><span data-i18n="h3">Quy hoạch động từng bước</span></h2>
+    <div class="grid2">
+      <div>
+        <div class="tabs seg" id="viewSeg" style="border-radius:10px">
+          <button data-view="2d" class="on" data-i18n="view2d">Bảng dp[i][j] (2 chiều)</button>
+          <button data-view="1d" data-i18n="view1d">Mảng dp[j] (code nộp WeCode)</button>
+        </div>
+        <div class="board-wrap"><div class="board" id="board"></div></div>
+        <canvas id="heat" hidden></canvas>
+        <div class="legend" id="legend">
+          <span><i class="sw" style="background:var(--cur-soft);border-color:var(--cur)"></i><span data-i18n="lgCur">ô đang tính</span></span>
+          <span><i class="sw" style="background:var(--up-soft);border-color:var(--up)"></i><span data-i18n="lgUp">ô phía trên</span></span>
+          <span><i class="sw" style="background:var(--left-soft);border-color:var(--left)"></i><span data-i18n="lgLeft">ô bên trái</span></span>
+          <span><i class="sw" style="background:var(--cell-block)"></i>🚓 <span data-i18n="lgBlock">chốt CSGT</span></span>
+          <span><i class="sw" style="outline:2px solid var(--path);outline-offset:-2px"></i><span data-i18n="lgPath">một đường an toàn</span></span>
+        </div>
+        <div class="controls" id="controls">
+          <button class="btn icon" id="bReset" title="Reset (Home)">⏮</button>
+          <button class="btn icon" id="bBack" title="← ">◀</button>
+          <button class="btn primary" id="bPlay" style="min-width:110px;justify-content:center">▶ <span data-i18n="play">Chạy</span></button>
+          <button class="btn icon" id="bStep" title="→">▶|</button>
+          <button class="btn icon" id="bEnd" title="End">⏭</button>
+          <span class="speed"><span data-i18n="speed">Tốc độ</span><input type="range" id="speed" min="1" max="10" value="4"></span>
+        </div>
+        <div class="progress"><div id="prog"></div></div>
+        <div class="hint" style="text-align:center;margin-top:6px" data-i18n-html="keys"></div>
+      </div>
+      <div>
+        <div class="explain" id="explain"></div>
+        <div id="arrBox" hidden>
+          <div class="small muted" style="margin-top:10px" data-i18n-html="arrNote"></div>
+          <div class="arr" id="arr"></div>
+        </div>
+        <div class="small muted" style="margin:12px 0 4px" data-i18n="pseudo">Mã giả</div>
+        <div class="code" id="code"></div>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Kết quả -->
+  <section class="card">
+    <h2><span class="num">4</span><span data-i18n="h4">Kết quả</span></h2>
+    <div class="result">
+      <div class="stat"><div class="k" data-i18n="rOut">Output (mod 10⁹+7)</div><div class="v" id="rAns">—</div></div>
+      <div class="stat"><div class="k" data-i18n="rExact">Số đường thật (chưa lấy dư)</div><div class="v sm mono" id="rExact">—</div></div>
+      <div class="stat"><div class="k" data-i18n="rMeta">Kích thước · số chốt · thời gian</div><div class="v sm" id="rMeta">—</div></div>
+    </div>
+    <div class="row">
+      <button class="btn" id="bPath" data-i18n="btnPath">🛵 Vẽ một đường an toàn ngẫu nhiên</button>
+      <button class="btn" id="bUseful" data-i18n="btnUseful">👁 Làm mờ ô không nằm trên đường nào</button>
+    </div>
+    <div class="msg warn" id="pathMsg" hidden></div>
+  </section>
+
+  <!-- 5. Phân tích -->
+  <section class="card">
+    <h2><span class="num">5</span><span data-i18n="h5">Vì sao thuật toán đúng &amp; nhanh?</span></h2>
+    <div data-i18n-html="analysis"></div>
+  </section>
+
+  <footer data-i18n-html="footer"></footer>
+</div>
+<div id="caption"></div>
+
+<script src="core.js"></script>
+<script>
+(() => {
+const S = window.SafePath;
+const VIZ_MAX = 16;   // lớn hơn thì không hoạt hình từng ô
+const I18N = {
+  vi: {
+    title:'Đường đi an toàn',
+    subtitle:'Trực quan hóa Quy hoạch động · CS112 – Phân tích & Thiết kế thuật toán · UIT',
+    h1:'Bài toán', h2:'Nhập dữ liệu', h3:'Quy hoạch động từng bước', h4:'Kết quả', h5:'Vì sao thuật toán đúng & nhanh?',
+    story:'Tấn Lưu chở ba từ <b>KTX khu B</b> 🏠 (góc trái trên, ô [1,1]) về <b>UIT</b> 🏫 (góc phải dưới, ô [n,n]) trên bản đồ <b>n × n</b>. Một số ô có <b>chốt cảnh sát giao thông</b> 🚓 (ký tự <code>*</code>).',
+    task:'Mỗi bước chỉ được đi <b>sang phải</b> hoặc <b>xuống dưới</b>. Hãy đếm số con đường <b>không đi qua chốt nào</b>, lấy dư cho 10⁹+7.',
+    inFmt:'dòng 1: <code>n</code> (1 ≤ n ≤ 1000); n dòng sau: mỗi dòng n ký tự <code>.</code> (ô trống) hoặc <code>*</code> (chốt).',
+    outFmt:'một số nguyên — số đường đi an toàn mod 10⁹+7.',
+    preStatement:'Ví dụ trong đề', preOpen:'Không có chốt', preWall:'Bị chặn hết', preStart:'Chốt ngay KTX',
+    rndLabel:'Sinh ngẫu nhiên:', density:'mật độ chốt', keepEnds:'giữ trống KTX & UIT', btnRandom:'🎲 Sinh',
+    btnLoad:'✔ Kiểm tra & nạp', editHint:'Mẹo: bấm vào một ô trên lưới để bật/tắt chốt CSGT.',
+    view2d:'Bảng dp[i][j] (2 chiều)', view1d:'Mảng dp[j] (code nộp WeCode)',
+    lgCur:'ô đang tính', lgUp:'ô phía trên', lgLeft:'ô bên trái', lgBlock:'chốt CSGT', lgPath:'một đường an toàn',
+    play:'Chạy', pause:'Dừng', speed:'Tốc độ', pseudo:'Mã giả',
+    keys:'Phím tắt: <kbd>Space</kbd> chạy/dừng · <kbd>←</kbd><kbd>→</kbd> lùi/tiến · <kbd>Home</kbd><kbd>End</kbd> đầu/cuối',
+    arrNote:'Code thực tế chỉ giữ <b>một hàng</b> <code>dp[0..n-1]</code>. Trước khi cập nhật, <code>dp[j]</code> còn là giá trị của <b style="color:var(--up)">ô phía trên</b>; <code>dp[j-1]</code> vừa được cập nhật nên là <b style="color:var(--left)">ô bên trái</b>.',
+    rOut:'Output (mod 10⁹+7)', rExact:'Số đường thật (chưa lấy dư)', rMeta:'Kích thước · số chốt · thời gian',
+    btnPath:'🛵 Vẽ một đường an toàn ngẫu nhiên', btnUseful:'👁 Làm mờ ô không nằm trên đường nào',
+    noPath:'Không có đường an toàn nào — kết quả là 0.', pathShown:'Đường được tô viền xanh là một trong {k} đường an toàn.',
+    usefulOn:'Ô bị làm mờ: không có đường an toàn nào đi qua (không tới được từ KTX hoặc không đi tiếp tới UIT được).',
+    okLoaded:'Hợp lệ: lưới {n}×{n}, {b} chốt. Bấm ▶ Chạy để xem từng bước.',
+    okBig:'Hợp lệ: lưới {n}×{n}, {b} chốt. Lưới lớn hơn {m}×{m} nên chỉ hiển thị bản đồ nhiệt và kết quả (không chạy từng ô).',
+    errEmpty:'Input trống.', errNNotInt:'Dòng {line}: "{value}" không phải số nguyên dương n.',
+    errNRange:'n = {n} nằm ngoài giới hạn 1 ≤ n ≤ {max}.', errRowCount:'Cần đúng {n} dòng bản đồ nhưng có {got} dòng.',
+    errRowLen:'Dòng {line} (hàng {row} của bản đồ) có {got} ký tự, cần đúng {n}.',
+    errBadChar:'Dòng {line}, hàng {row}, cột {col}: ký tự "{ch}" không hợp lệ (chỉ dùng . hoặc *).',
+    errTitle:'Input chưa hợp lệ:',
+    exReady:'Sẵn sàng', exReadyBody:'Bấm <b>▶ Chạy</b> hoặc <b>▶|</b> để điền bảng theo thứ tự <b>từng hàng, trái → phải</b>. Khi tới ô (i,j), mọi ô phía trên và bên trái đã có kết quả.',
+    exStart:'Ô xuất phát (1,1) – KTX khu B', exStartBody:'Có đúng <b>1 cách</b> để "đi" từ KTX tới chính nó: đứng yên. Đây là <b>trường hợp cơ sở</b>.',
+    exStartBlocked:'Ô xuất phát có chốt!', exStartBlockedBody:'Chốt ngay cửa KTX → không có đường nào, dp = 0.',
+    exBlock:'Ô ({i},{j}) có chốt 🚓', exBlockBody:'Không đường an toàn nào được đi qua ô này ⇒ <b>dp = 0</b>. Ô phía dưới/bên phải sẽ không nhận được gì từ đây.',
+    exSum:'Ô ({i},{j})', exSumBody:'Bước cuối cùng để tới ô này chỉ có thể đến <b style="color:var(--up)">từ trên xuống</b> hoặc <b style="color:var(--left)">từ trái sang</b>. Hai nhóm đường này không trùng nhau ⇒ cộng lại.',
+    exEdgeTop:'Ở hàng đầu: không có ô phía trên (coi là 0).', exEdgeLeft:'Ở cột đầu: không có ô bên trái (coi là 0).',
+    exDone:'Hoàn tất!', exDoneBody:'Đáp án là giá trị ở ô UIT ({n},{n}).',
+    exModNote:'Số thật = {x} ≥ 10⁹+7 nên in ra {x} mod 10⁹+7.',
+    logStart:'dp[1][1] = 1', logBlock:'dp[{i}][{j}] = 0 (chốt)', logSum:'dp[{i}][{j}] = {u} + {l} = {v}',
+    footer:'Đinh Văn Huy – 25730032 · CS112.2026.TX · Bài tập lớn: demo có giao diện · Lời giải chạy O(n²) thời gian, O(n) bộ nhớ.',
+    analysis:`<ol class="small">
+      <li><b>Định nghĩa trạng thái.</b> <code>dp[i][j]</code> = số đường an toàn từ KTX (1,1) tới ô (i,j).</li>
+      <li><b>Công thức truy hồi.</b> Mọi đường tới (i,j) có bước cuối là ↓ từ (i−1,j) hoặc → từ (i,j−1); hai nhóm rời nhau và phủ hết, nên
+        <code>dp[i][j] = 0</code> nếu (i,j) là chốt, ngược lại <code>dp[i][j] = dp[i−1][j] + dp[i][j−1]</code> (ô ngoài bản đồ = 0).</li>
+      <li><b>Cơ sở.</b> <code>dp[1][1] = 1</code> nếu KTX không có chốt. <b>Đáp án</b> <code>dp[n][n] mod (10⁹+7)</code>. Lấy dư sau mỗi phép cộng là đúng vì (a+b) mod p = ((a mod p)+(b mod p)) mod p.</li>
+      <li><b>Thứ tự tính.</b> Duyệt hàng trên → dưới, cột trái → phải: khi tính (i,j) thì (i−1,j) và (i,j−1) đã xong.</li>
+      <li><b>Độ phức tạp.</b> Mỗi ô làm O(1) việc ⇒ <b>Θ(n²)</b> thời gian (n = 1000: 10⁶ phép tính). Chỉ cần hàng trước ⇒ nén còn <b>Θ(n)</b> bộ nhớ (mảng <code>dp[j]</code>).</li>
+      <li><b>So với vét cạn.</b> Không có chốt thì số đường là C(2n−2, n−1) — với n = 1000 lớn cỡ 10⁵⁹⁸, liệt kê từng đường là bất khả thi. Đây là ví dụ kinh điển của <b>bài toán con gối nhau</b>: QHĐ lưu lại để không tính lại.</li>
+    </ol>`
+  },
+  en: {
+    title:'Safe Path',
+    subtitle:'Dynamic Programming visualizer · CS112 – Design & Analysis of Algorithms · UIT',
+    h1:'Problem', h2:'Input', h3:'Dynamic programming, step by step', h4:'Result', h5:'Why is it correct & fast?',
+    story:'Tấn Lưu rides from <b>Dorm B</b> 🏠 (top-left, cell [1,1]) to <b>UIT</b> 🏫 (bottom-right, cell [n,n]) on an <b>n × n</b> map. Some cells hold a <b>traffic police checkpoint</b> 🚓 (character <code>*</code>).',
+    task:'Each move goes either <b>right</b> or <b>down</b>. Count the paths that <b>avoid every checkpoint</b>, modulo 10⁹+7.',
+    inFmt:'line 1: <code>n</code> (1 ≤ n ≤ 1000); next n lines: n characters each, <code>.</code> (free) or <code>*</code> (checkpoint).',
+    outFmt:'one integer — the number of safe paths mod 10⁹+7.',
+    preStatement:'Statement example', preOpen:'No checkpoints', preWall:'Fully blocked', preStart:'Checkpoint at dorm',
+    rndLabel:'Random map:', density:'checkpoint density', keepEnds:'keep dorm & UIT free', btnRandom:'🎲 Generate',
+    btnLoad:'✔ Validate & load', editHint:'Tip: click a grid cell to toggle a checkpoint.',
+    view2d:'Table dp[i][j] (2-D)', view1d:'Array dp[j] (submitted code)',
+    lgCur:'current cell', lgUp:'cell above', lgLeft:'cell to the left', lgBlock:'checkpoint', lgPath:'one safe path',
+    play:'Play', pause:'Pause', speed:'Speed', pseudo:'Pseudocode',
+    keys:'Keys: <kbd>Space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> back/step · <kbd>Home</kbd><kbd>End</kbd> first/last',
+    arrNote:'The real code keeps <b>one row</b> <code>dp[0..n-1]</code>. Before the update, <code>dp[j]</code> still holds the <b style="color:var(--up)">cell above</b>; <code>dp[j-1]</code> was just updated, so it is the <b style="color:var(--left)">cell to the left</b>.',
+    rOut:'Output (mod 10⁹+7)', rExact:'Exact path count (before mod)', rMeta:'Size · checkpoints · time',
+    btnPath:'🛵 Draw a random safe path', btnUseful:'👁 Dim cells on no safe path',
+    noPath:'There is no safe path — the answer is 0.', pathShown:'The green-outlined route is one of {k} safe paths.',
+    usefulOn:'Dimmed cells lie on no safe path (unreachable from the dorm, or cannot continue to UIT).',
+    okLoaded:'Valid: {n}×{n} grid, {b} checkpoints. Press ▶ Play to watch each step.',
+    okBig:'Valid: {n}×{n} grid, {b} checkpoints. Larger than {m}×{m}, so only a heat map and the result are shown (no per-cell animation).',
+    errEmpty:'Input is empty.', errNNotInt:'Line {line}: "{value}" is not a positive integer n.',
+    errNRange:'n = {n} is outside 1 ≤ n ≤ {max}.', errRowCount:'Expected exactly {n} map lines but got {got}.',
+    errRowLen:'Line {line} (map row {row}) has {got} characters, expected {n}.',
+    errBadChar:'Line {line}, row {row}, column {col}: invalid character "{ch}" (only . or *).',
+    errTitle:'Invalid input:',
+    exReady:'Ready', exReadyBody:'Press <b>▶ Play</b> or <b>▶|</b> to fill the table <b>row by row, left → right</b>. When we reach (i,j), every cell above and to the left is already known.',
+    exStart:'Start cell (1,1) – Dorm B', exStartBody:'There is exactly <b>1 way</b> to "travel" from the dorm to itself: stay put. This is the <b>base case</b>.',
+    exStartBlocked:'Checkpoint at the start!', exStartBlockedBody:'A checkpoint at the dorm gate → no path at all, dp = 0.',
+    exBlock:'Cell ({i},{j}) has a checkpoint 🚓', exBlockBody:'No safe path may pass here ⇒ <b>dp = 0</b>. Cells below/right receive nothing from it.',
+    exSum:'Cell ({i},{j})', exSumBody:'The last move into this cell comes either <b style="color:var(--up)">down from above</b> or <b style="color:var(--left)">right from the left</b>. These groups are disjoint ⇒ add them.',
+    exEdgeTop:'First row: no cell above (counts as 0).', exEdgeLeft:'First column: no cell to the left (counts as 0).',
+    exDone:'Done!', exDoneBody:'The answer is the value at UIT ({n},{n}).',
+    exModNote:'Exact = {x} ≥ 10⁹+7, so we print {x} mod 10⁹+7.',
+    logStart:'dp[1][1] = 1', logBlock:'dp[{i}][{j}] = 0 (checkpoint)', logSum:'dp[{i}][{j}] = {u} + {l} = {v}',
+    footer:'Đinh Văn Huy – 25730032 · CS112.2026.TX · Course project: interactive demo · The solution runs in O(n²) time and O(n) memory.',
+    analysis:`<ol class="small">
+      <li><b>State.</b> <code>dp[i][j]</code> = number of safe paths from the dorm (1,1) to cell (i,j).</li>
+      <li><b>Recurrence.</b> Every path into (i,j) ends with ↓ from (i−1,j) or → from (i,j−1); the two groups are disjoint and exhaustive, so
+        <code>dp[i][j] = 0</code> on a checkpoint, otherwise <code>dp[i][j] = dp[i−1][j] + dp[i][j−1]</code> (outside the map = 0).</li>
+      <li><b>Base.</b> <code>dp[1][1] = 1</code> if the dorm is free. <b>Answer</b> <code>dp[n][n] mod (10⁹+7)</code>. Reducing after every addition is valid since (a+b) mod p = ((a mod p)+(b mod p)) mod p.</li>
+      <li><b>Order.</b> Rows top → bottom, columns left → right: (i−1,j) and (i,j−1) are ready before (i,j).</li>
+      <li><b>Complexity.</b> O(1) work per cell ⇒ <b>Θ(n²)</b> time (10⁶ steps for n = 1000). Only the previous row is needed ⇒ <b>Θ(n)</b> memory (array <code>dp[j]</code>).</li>
+      <li><b>Versus brute force.</b> With no checkpoints there are C(2n−2, n−1) paths — about 10⁵⁹⁸ for n = 1000, impossible to enumerate. A classic case of <b>overlapping subproblems</b>: DP stores results instead of recomputing them.</li>
+    </ol>`
+  }
+};
+const CODE = {
+  '2d': [
+    'for i ← 1..n:',
+    '  for j ← 1..n:',
+    '    if map[i][j] = \'*\':  dp[i][j] ← 0',
+    '    elif (i,j) = (1,1):  dp[i][j] ← 1',
+    '    else: dp[i][j] ← (dp[i-1][j] + dp[i][j-1]) mod P',
+    'print dp[n][n]'
+  ],
+  '1d': [
+    'dp ← [1, 0, 0, …, 0]          # length n',
+    'for each row in map:',
+    '  for j in 0..n-1:',
+    '    if row[j] = \'*\':  dp[j] ← 0',
+    '    elif j > 0:  dp[j] ← (dp[j] + dp[j-1]) mod P',
+    'print dp[n-1]'
+  ]
+};
+const PRESETS = {
+  statement: '4\n....\n.*..\n...*\n*...',
+  open: '5\n.....\n.....\n.....\n.....\n.....',
+  wall: '5\n..*..\n.*...\n*....\n.....\n.....',
+  start: '3\n*..\n...\n...'
+};
+
+let lang = 'vi', view = '2d';
+let grid = null, n = 0, steps = [], table = null, cur = -1, timer = null;
+let path = null, showUseful = false, useful = null, exact = null;
+const $ = id => document.getElementById(id);
+const T = (k, p) => { let s = (I18N[lang][k] ?? k); if (p) for (const [a, b] of Object.entries(p)) s = s.split('{' + a + '}').join(b); return s; };
+const fmt = v => { const s = v.toString(); return s.length > 9 ? s.slice(0, 3) + '…' + s.slice(-3) : s; };
+const modStr = v => (typeof v === 'bigint' ? (v % 1000000007n).toString() : String(v));
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = T(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-html]').forEach(el => el.innerHTML = T(el.dataset.i18nHtml));
+  document.querySelectorAll('#langSeg button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  document.title = T('title');
+  setPlayLabel();
+  renderAll();
+  if (lastMsg) showMsg(...lastMsg);
+}
+
+// ---------- nạp dữ liệu ----------
+let lastMsg = null;
+function showMsg(kind, key, params, errors) {
+  lastMsg = [kind, key, params, errors];
+  const box = $('msg');
+  if (kind === 'err') {
+    box.innerHTML = `<div class="msg err"><b>${T('errTitle')}</b><ul>${errors.map(e => `<li>${T(e.key, e.params)}</li>`).join('')}</ul></div>`;
+  } else box.innerHTML = `<div class="msg ${kind}">${T(key, params)}</div>`;
+}
+
+function load(text) {
+  stop();
+  const p = S.parseInput(text);
+  if (!p.ok) { showMsg('err', null, null, p.errors); return false; }
+  setGrid(p.grid);
+  return true;
+}
+
+function setGrid(g) {
+  grid = g; n = g.length; path = null; showUseful = false;
+  $('pathMsg').hidden = true;
+  const t0 = performance.now();
+  const ans = S.countPaths(grid);
+  const dt = performance.now() - t0;
+  const blocks = grid.flat().filter(Boolean).length;
+  exact = n <= 400 ? S.fullTable(grid, true)[n - 1][n - 1] : null;
+  $('rAns').textContent = ans;
+  $('rExact').textContent = exact === null ? (lang === 'vi' ? '(n > 400: không tính số lớn)' : '(n > 400: skipped big number)') : exact.toString();
+  $('rMeta').textContent = `${n}×${n} · ${blocks} 🚓 · ${dt < 1 ? dt.toFixed(2) : dt.toFixed(1)} ms`;
+  $('input').value = S.gridToText(grid);
+  if (n <= VIZ_MAX) {
+    const b = S.buildSteps(grid); steps = b.steps; table = b.table;
+    showMsg('ok', 'okLoaded', { n, b: blocks });
+  } else {
+    steps = []; table = null;
+    showMsg('ok', 'okBig', { n, b: blocks, m: VIZ_MAX });
+  }
+  useful = null;
+  cur = -1;
+  renderAll();
+  return ans;
+}
+
+// ---------- vẽ ----------
+function cellSize() {
+  const w = Math.min($('board').parentElement.clientWidth || 560, 620);
+  const cs = Math.max(26, Math.min(76, Math.floor((w - 26 - 4 * n) / n)));
+  return cs;
+}
+
+function renderAll() {
+  if (!grid) return;
+  const big = n > VIZ_MAX;
+  $('board').hidden = big; $('heat').hidden = !big;
+  $('controls').style.display = big ? 'none' : '';
+  $('legend').style.display = big ? 'none' : '';
+  if (big) { drawHeat(); renderExplain(); renderCode(); $('log').innerHTML = ''; $('arrBox').hidden = true; return; }
+  buildBoard(); paint(); renderCode(); renderExplain(); renderArr(); renderLog();
+}
+
+function buildBoard() {
+  const b = $('board');
+  const cs = cellSize();
+  b.style.setProperty('--cs', cs + 'px');
+  b.style.setProperty('--fs', Math.max(10, Math.round(cs * 0.27)) + 'px');
+  b.style.gridTemplateColumns = `18px repeat(${n}, ${cs}px)`;
+  let h = '<div></div>';
+  for (let j = 0; j < n; j++) h += `<div class="coord">${j + 1}</div>`;
+  for (let i = 0; i < n; i++) {
+    h += `<div class="coord">${i + 1}</div>`;
+    for (let j = 0; j < n; j++) h += `<div class="cell" data-i="${i}" data-j="${j}"></div>`;
+  }
+  b.innerHTML = h;
+}
+
+function paint() {
+  const done = new Set();
+  for (let k = 0; k <= cur && k < steps.length; k++) done.add(steps[k].i * n + steps[k].j);
+  const st = cur >= 0 ? steps[cur] : null;
+  const onPath = new Set((path || []).map(([i, j]) => i * n + j));
+  if (showUseful && !useful) useful = S.usefulCells(grid);
+  document.querySelectorAll('#board .cell').forEach(el => {
+    const i = +el.dataset.i, j = +el.dataset.j, id = i * n + j;
+    const blk = grid[i][j];
+    el.className = 'cell';
+    let ico = '';
+    if (blk) { el.classList.add('block'); ico = '🚓'; }
+    else if (i === 0 && j === 0) ico = '🏠';
+    else if (i === n - 1 && j === n - 1) ico = '🏫';
+    let val = '';
+    if (done.has(id)) {
+      const v = table[i][j];
+      el.classList.add('done');
+      if (v === 0n) el.classList.add('zero');
+      if (!blk) val = fmt(modStr(v));
+      else val = '0';
+    }
+    if (ico) el.classList.add('has-ico');
+    el.innerHTML = (ico ? `<span class="ico">${ico}</span>` : '') + `<span class="val">${val}</span>`;
+    if (st) {
+      if (st.i === i && st.j === j) el.classList.add('cur');
+      if (st.kind === 'sum' && st.i - 1 === i && st.j === j) { el.classList.add('src-up'); }
+      if (st.kind === 'sum' && st.i === i && st.j - 1 === j) { el.classList.add('src-left'); }
+    }
+    if (st && st.kind === 'sum' && st.i === i && st.j === j) {
+      if (i > 0) el.insertAdjacentHTML('beforeend', '<span class="arrow a-up">↓</span>');
+      if (j > 0) el.insertAdjacentHTML('beforeend', '<span class="arrow a-left">→</span>');
+    }
+    if (onPath.has(id)) el.classList.add('onpath');
+    if (showUseful && !useful[i][j]) el.classList.add('useless');
+    el.title = `(${i + 1},${j + 1})` + (done.has(id) ? ` dp = ${table[i][j].toString()}` : '');
+  });
+  $('prog').style.width = (steps.length ? ((cur + 1) / steps.length) * 100 : 0) + '%';
+  $('bBack').disabled = cur < 0; $('bReset').disabled = cur < 0;
+  $('bStep').disabled = $('bEnd').disabled = cur >= steps.length - 1;
+}
+
+function codeLine() {
+  const st = cur >= 0 ? steps[cur] : null;
+  if (!st) return n > VIZ_MAX ? 5 : -1;
+  if (cur === steps.length - 1 && finishedView) return 5;
+  if (view === '2d') return st.kind === 'blocked' ? 2 : st.kind === 'start' ? 3 : 4;
+  if (st.kind === 'blocked') return 3;
+  if (st.j > 0) return 4;
+  return st.kind === 'start' ? 0 : 2;
+}
+let finishedView = false;
+
+function renderCode() {
+  const hl = codeLine();
+  $('code').innerHTML = CODE[view].map((l, k) => `<div class="${k === hl ? 'hl' : ''}"><span class="ln">${k + 1}</span>${l.replace(/</g, '&lt;')}</div>`).join('');
+}
+
+function renderExplain() {
+  const ex = $('explain');
+  if (!grid) { ex.innerHTML = ''; return; }
+  if (n > VIZ_MAX) {
+    ex.innerHTML = `<div class="head">${T('exDone')}</div><div>${T('exDoneBody', { n })}</div><div class="formula">dp[${n}][${n}] mod P = <span class="r">${$('rAns').textContent}</span></div>`;
+    return;
+  }
+  const st = cur >= 0 ? steps[cur] : null;
+  let h;
+  if (!st) h = `<div class="head">${T('exReady')}</div><div class="small">${T('exReadyBody')}</div>`;
+  else {
+    const I = st.i + 1, J = st.j + 1;
+    if (st.kind === 'start') h = `<div class="head">${T('exStart')}</div><div class="small">${T('exStartBody')}</div><div class="formula">dp[1][1] = <span class="r">1</span></div>`;
+    else if (st.kind === 'blocked' && st.i === 0 && st.j === 0) h = `<div class="head">${T('exStartBlocked')}</div><div class="small">${T('exStartBlockedBody')}</div><div class="formula">dp[1][1] = <span class="r">0</span></div>`;
+    else if (st.kind === 'blocked') h = `<div class="head">${T('exBlock', { i: I, j: J })}</div><div class="small">${T('exBlockBody')}</div><div class="formula">dp[${I}][${J}] = <span class="r">0</span></div>`;
+    else {
+      const u = st.up === null ? '0' : modStr(st.up), l = st.left === null ? '0' : modStr(st.left);
+      const notes = [];
+      if (st.up === null) notes.push(T('exEdgeTop'));
+      if (st.left === null) notes.push(T('exEdgeLeft'));
+      h = `<div class="head">${T('exSum', { i: I, j: J })}</div><div class="small">${T('exSumBody')}${notes.length ? '<br><i>' + notes.join(' ') + '</i>' : ''}</div>
+        <div class="formula">dp[${I}][${J}] = <span class="u">dp[${I - 1}][${J}]</span> + <span class="l">dp[${I}][${J - 1}]</span> = <span class="u">${u}</span> + <span class="l">${l}</span> = <span class="r">${modStr(st.value)}</span></div>`;
+    }
+    if (cur === steps.length - 1) {
+      const v = table[n - 1][n - 1];
+      h += `<div class="msg ok" style="margin-top:10px"><b>${T('exDone')}</b> ${T('exDoneBody', { n })} → <b class="mono">${modStr(v)}</b>${v >= 1000000007n ? '<br>' + T('exModNote', { x: v.toString() }) : ''}</div>`;
+    }
+  }
+  ex.innerHTML = h;
+}
+
+function renderArr() {
+  $('arrBox').hidden = view !== '1d';
+  if (view !== '1d' || !grid) return;
+  const st = cur >= 0 ? steps[cur] : null;
+  // trạng thái mảng dp[j] ngay sau bước hiện tại
+  const row = st ? st.i : -1;
+  let h = '';
+  for (let j = 0; j < n; j++) {
+    let v;
+    if (!st) v = j === 0 ? 1n : 0n;
+    else if (j <= st.j) v = table[row][j];
+    else v = row > 0 ? table[row - 1][j] : (j === 0 ? 1n : 0n);
+    const cls = st && j === st.j ? 'cur' : st && j === st.j - 1 && st.kind === 'sum' ? 'lft' : '';
+    h += `<div class="slot ${cls}">${fmt(modStr(v))}<small>dp[${j}]</small></div>`;
+  }
+  $('arr').innerHTML = h;
+}
+
+function renderLog() {
+  const out = [];
+  const from = Math.max(0, cur - 40);
+  for (let k = from; k <= cur; k++) {
+    const s = steps[k], I = s.i + 1, J = s.j + 1;
+    let t = s.kind === 'start' ? T('logStart') : s.kind === 'blocked' ? T('logBlock', { i: I, j: J })
+      : T('logSum', { i: I, j: J, u: s.up === null ? 0 : modStr(s.up), l: s.left === null ? 0 : modStr(s.left), v: modStr(s.value) });
+    out.push(`<div class="${k === cur ? 'now' : ''}">${k + 1}. ${t}</div>`);
+  }
+  const lg = $('log'); lg.innerHTML = out.join(''); lg.scrollTop = lg.scrollHeight;
+}
+
+function drawHeat() {
+  const c = $('heat'), px = Math.max(1, Math.floor(600 / n));
+  c.width = c.height = n * px;
+  c.style.width = Math.min(600, n * px) + 'px';
+  const ctx = c.getContext('2d');
+  // tô màu theo log(số đường tới ô) — dùng số thực để vẽ nhanh
+  const f = new Float64Array(n);
+  let max = 0;
+  const vals = new Float64Array(n * n);
+  f[0] = 1;
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    if (grid[i][j]) f[j] = 0; else if (j > 0) f[j] = f[j] + f[j - 1];
+    const v = f[j] > 0 ? Math.log10(f[j] === Infinity ? 1e308 : f[j]) + 1 : 0; vals[i * n + j] = v; if (v > max) max = v;
+  }
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches && document.documentElement.dataset.theme !== 'light' || document.documentElement.dataset.theme === 'dark';
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    if (grid[i][j]) ctx.fillStyle = '#d33';
+    else { const t = max ? vals[i * n + j] / max : 0; const L = dark ? 14 + t * 50 : 96 - t * 56; ctx.fillStyle = vals[i * n + j] === 0 ? (dark ? '#222a36' : '#e9ecf2') : `hsl(222 75% ${L}%)`; }
+    ctx.fillRect(j * px, i * px, px, px);
+  }
+}
+
+// ---------- điều khiển ----------
+function go(k) {
+  cur = Math.max(-1, Math.min(steps.length - 1, k));
+  finishedView = cur === steps.length - 1;
+  paint(); renderCode(); renderExplain(); renderArr(); renderLog();
+  if (cur >= steps.length - 1) stop();
+}
+function delay() { const s = +$('speed').value; return Math.round(1600 / Math.pow(1.55, s - 1)); }
+function play() {
+  if (!steps.length) return;
+  if (cur >= steps.length - 1) go(-1);
+  stop(false);
+  timer = setInterval(() => { if (cur >= steps.length - 1) stop(); else go(cur + 1); }, delay());
+  setPlayLabel();
+}
+function stop() { if (timer) clearInterval(timer); timer = null; setPlayLabel(); }
+function setPlayLabel() { $('bPlay').innerHTML = timer ? '⏸ <span>' + T('pause') + '</span>' : '▶ <span>' + T('play') + '</span>'; }
+
+$('bPlay').onclick = () => (timer ? stop() : play());
+$('bStep').onclick = () => { stop(); go(cur + 1); };
+$('bBack').onclick = () => { stop(); go(cur - 1); };
+$('bReset').onclick = () => { stop(); go(-1); };
+$('bEnd').onclick = () => { stop(); go(steps.length - 1); };
+$('speed').oninput = () => { if (timer) play(); };
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+  if (e.key === ' ') { e.preventDefault(); timer ? stop() : play(); }
+  else if (e.key === 'ArrowRight') $('bStep').click();
+  else if (e.key === 'ArrowLeft') $('bBack').click();
+  else if (e.key === 'Home') $('bReset').click();
+  else if (e.key === 'End') $('bEnd').click();
+});
+$('board').addEventListener('click', e => {
+  const el = e.target.closest('.cell'); if (!el) return;
+  const i = +el.dataset.i, j = +el.dataset.j;
+  const g = grid.map(r => r.slice()); g[i][j] = !g[i][j];
+  stop(); setGrid(g);
+});
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => { $('input').value = PRESETS[b.dataset.preset]; load(PRESETS[b.dataset.preset]); });
+$('btnLoad').onclick = () => load($('input').value);
+$('rd').oninput = () => $('rdv').textContent = $('rd').value + '%';
+$('btnRandom').onclick = () => {
+  const rn = $('rn');
+  const v = Number(rn.value);
+  if (!Number.isInteger(v) || v < 1 || v > S.MAX_N) { showMsg('err', null, null, [{ key: 'errNRange', params: { n: rn.value || '∅', max: S.MAX_N } }]); return; }
+  stop();
+  setGrid(S.randomGrid(v, +$('rd').value / 100, (Math.random() * 1e9) | 0, $('rkeep').checked));
+};
+$('bPath').onclick = () => {
+  if (!grid) return;
+  if (n > 400) return;
+  path = S.samplePath(grid);
+  const m = $('pathMsg'); m.hidden = false;
+  if (!path) { m.className = 'msg err'; m.textContent = T('noPath'); }
+  else { m.className = 'msg ok'; m.textContent = T('pathShown', { k: exact.toString() }); if (cur < steps.length - 1) go(steps.length - 1); }
+  if (n <= VIZ_MAX) paint();
+};
+$('bUseful').onclick = () => {
+  if (!grid || n > VIZ_MAX) return;
+  showUseful = !showUseful; paint();
+  const m = $('pathMsg'); m.hidden = !showUseful; m.className = 'msg warn'; m.textContent = T('usefulOn');
+};
+document.querySelectorAll('#viewSeg button').forEach(b => b.onclick = () => {
+  view = b.dataset.view;
+  document.querySelectorAll('#viewSeg button').forEach(x => x.classList.toggle('on', x === b));
+  renderCode(); renderArr();
+});
+document.querySelectorAll('#langSeg button').forEach(b => b.onclick = () => { lang = b.dataset.lang; try { localStorage.setItem('sp-lang', lang); } catch (e) {} applyLang(); });
+document.querySelectorAll('#themeSeg button').forEach(b => b.onclick = () => {
+  const t = b.dataset.theme;
+  if (t === 'auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t;
+  document.querySelectorAll('#themeSeg button').forEach(x => x.classList.toggle('on', x === b));
+  if (grid && n > VIZ_MAX) drawHeat();
+});
+let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => grid && renderAll(), 150); });
+
+// API nhỏ cho kịch bản quay video
+window.demo = { load, go, play, stop, setView: v => document.querySelector(`#viewSeg [data-view="${v}"]`).click(), setLang: l => document.querySelector(`#langSeg [data-lang="${l}"]`).click(), steps: () => steps.length,
+  caption: t => { const c = $('caption'); c.style.display = t ? 'block' : 'none'; c.textContent = t || ''; } };
+
+try { const l = localStorage.getItem('sp-lang'); if (l === 'en' || l === 'vi') lang = l; } catch (e) {}
+$('input').value = PRESETS.statement;
+applyLang();
+load(PRESETS.statement);
+})();
+</script>
+</body>
+</html>
