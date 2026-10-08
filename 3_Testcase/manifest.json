@@ -1,0 +1,918 @@
+[
+ {
+  "group": "01_thong_thuong",
+  "name": "n5_d20",
+  "n": 5,
+  "k": 6,
+  "expected": 3,
+  "exact_digits": 1,
+  "note": "ngẫu nhiên n=5, mật độ 20%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n7_d15",
+  "n": 7,
+  "k": 6,
+  "expected": 72,
+  "exact_digits": 2,
+  "note": "ngẫu nhiên n=7, mật độ 15%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n8_d25",
+  "n": 8,
+  "k": 18,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "ngẫu nhiên n=8, mật độ 25%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n10_d10",
+  "n": 10,
+  "k": 8,
+  "expected": 5074,
+  "exact_digits": 4,
+  "note": "ngẫu nhiên n=10, mật độ 10%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n10_d30",
+  "n": 10,
+  "k": 30,
+  "expected": 66,
+  "exact_digits": 2,
+  "note": "ngẫu nhiên n=10, mật độ 30%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n15_d20",
+  "n": 15,
+  "k": 51,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "ngẫu nhiên n=15, mật độ 20%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n20_d10",
+  "n": 20,
+  "k": 40,
+  "expected": 194381823,
+  "exact_digits": 9,
+  "note": "ngẫu nhiên n=20, mật độ 10%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n20_d25",
+  "n": 20,
+  "k": 100,
+  "expected": 86564,
+  "exact_digits": 5,
+  "note": "ngẫu nhiên n=20, mật độ 25%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n30_d15",
+  "n": 30,
+  "k": 142,
+  "expected": 957771031,
+  "exact_digits": 13,
+  "note": "ngẫu nhiên n=30, mật độ 15%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n40_d20",
+  "n": 40,
+  "k": 332,
+  "expected": 129390541,
+  "exact_digits": 15,
+  "note": "ngẫu nhiên n=40, mật độ 20%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n50_d10",
+  "n": 50,
+  "k": 248,
+  "expected": 411749823,
+  "exact_digits": 25,
+  "note": "ngẫu nhiên n=50, mật độ 10%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n60_d30",
+  "n": 60,
+  "k": 1046,
+  "expected": 819208194,
+  "exact_digits": 15,
+  "note": "ngẫu nhiên n=60, mật độ 30%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n80_d20",
+  "n": 80,
+  "k": 1309,
+  "expected": 353747145,
+  "exact_digits": 29,
+  "note": "ngẫu nhiên n=80, mật độ 20%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n100_d15",
+  "n": 100,
+  "k": 1504,
+  "expected": 982361448,
+  "exact_digits": 43,
+  "note": "ngẫu nhiên n=100, mật độ 15%"
+ },
+ {
+  "group": "01_thong_thuong",
+  "name": "n120_d25",
+  "n": 120,
+  "k": 3592,
+  "expected": 53411747,
+  "exact_digits": 37,
+  "note": "ngẫu nhiên n=120, mật độ 25%"
+ },
+ {
+  "group": "02_bien",
+  "name": "n1_trong",
+  "n": 1,
+  "k": 0,
+  "expected": 1,
+  "exact_digits": 1,
+  "note": "n = 1, ô trống: KTX trùng UIT ⇒ 1 đường"
+ },
+ {
+  "group": "02_bien",
+  "name": "n1_chot",
+  "n": 1,
+  "k": 1,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n = 1, có chốt ⇒ 0"
+ },
+ {
+  "group": "02_bien",
+  "name": "chot_tai_KTX",
+  "n": 5,
+  "k": 1,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "chốt ngay KTX ⇒ 0"
+ },
+ {
+  "group": "02_bien",
+  "name": "chot_tai_UIT",
+  "n": 5,
+  "k": 1,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "chốt ngay UIT ⇒ 0"
+ },
+ {
+  "group": "02_bien",
+  "name": "chan_ca_hang",
+  "n": 6,
+  "k": 6,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "một hàng bị chặn hết ⇒ 0"
+ },
+ {
+  "group": "02_bien",
+  "name": "chan_ca_cot",
+  "n": 6,
+  "k": 6,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "một cột bị chặn hết ⇒ 0"
+ },
+ {
+  "group": "02_bien",
+  "name": "vach_cheo_kin",
+  "n": 7,
+  "k": 7,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "chặn cả đường chéo phụ ⇒ 0"
+ },
+ {
+  "group": "02_bien",
+  "name": "vach_cheo_1_khe",
+  "n": 7,
+  "k": 6,
+  "expected": 400,
+  "exact_digits": 3,
+  "note": "đường chéo phụ chừa 1 khe ⇒ mọi đường qua khe"
+ },
+ {
+  "group": "02_bien",
+  "name": "hang_dau_chan",
+  "n": 4,
+  "k": 2,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "hai ô kề KTX đều có chốt ⇒ 0"
+ },
+ {
+  "group": "02_bien",
+  "name": "n1000_chot_KTX",
+  "n": 1000,
+  "k": 1,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n lớn nhất, chốt ngay KTX"
+ },
+ {
+  "group": "02_bien",
+  "name": "n1000_chot_UIT",
+  "n": 1000,
+  "k": 1,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n lớn nhất, chốt ngay UIT"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_00",
+  "n": 2,
+  "k": 0,
+  "expected": 2,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_01",
+  "n": 2,
+  "k": 1,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_02",
+  "n": 2,
+  "k": 1,
+  "expected": 1,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_03",
+  "n": 2,
+  "k": 2,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_04",
+  "n": 2,
+  "k": 1,
+  "expected": 1,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_05",
+  "n": 2,
+  "k": 2,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_06",
+  "n": 2,
+  "k": 2,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_07",
+  "n": 2,
+  "k": 3,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_08",
+  "n": 2,
+  "k": 1,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_09",
+  "n": 2,
+  "k": 2,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_10",
+  "n": 2,
+  "k": 2,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_11",
+  "n": 2,
+  "k": 3,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_12",
+  "n": 2,
+  "k": 2,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_13",
+  "n": 2,
+  "k": 3,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_14",
+  "n": 2,
+  "k": 3,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "02_bien",
+  "name": "n2_tatca_15",
+  "n": 2,
+  "k": 4,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "vét hết mọi bản đồ 2×2"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_00_n3",
+  "n": 3,
+  "k": 0,
+  "expected": 6,
+  "exact_digits": 1,
+  "note": "n=3, mật độ 0%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_01_n4",
+  "n": 4,
+  "k": 3,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=4, mật độ 10%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_02_n5",
+  "n": 5,
+  "k": 3,
+  "expected": 15,
+  "exact_digits": 2,
+  "note": "n=5, mật độ 20%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_03_n6",
+  "n": 6,
+  "k": 8,
+  "expected": 152,
+  "exact_digits": 3,
+  "note": "n=6, mật độ 30%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_04_n7",
+  "n": 7,
+  "k": 21,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=7, mật độ 45%, không giữ trống 2 đầu"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_05_n8",
+  "n": 8,
+  "k": 37,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=8, mật độ 60%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_06_n3",
+  "n": 3,
+  "k": 0,
+  "expected": 6,
+  "exact_digits": 1,
+  "note": "n=3, mật độ 0%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_07_n4",
+  "n": 4,
+  "k": 1,
+  "expected": 8,
+  "exact_digits": 1,
+  "note": "n=4, mật độ 10%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_08_n5",
+  "n": 5,
+  "k": 0,
+  "expected": 70,
+  "exact_digits": 2,
+  "note": "n=5, mật độ 20%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_09_n6",
+  "n": 6,
+  "k": 12,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=6, mật độ 30%, không giữ trống 2 đầu"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_10_n7",
+  "n": 7,
+  "k": 18,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=7, mật độ 45%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_11_n8",
+  "n": 8,
+  "k": 38,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=8, mật độ 60%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_12_n3",
+  "n": 3,
+  "k": 0,
+  "expected": 6,
+  "exact_digits": 1,
+  "note": "n=3, mật độ 0%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_13_n4",
+  "n": 4,
+  "k": 3,
+  "expected": 5,
+  "exact_digits": 1,
+  "note": "n=4, mật độ 10%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_14_n5",
+  "n": 5,
+  "k": 5,
+  "expected": 9,
+  "exact_digits": 1,
+  "note": "n=5, mật độ 20%, không giữ trống 2 đầu"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_15_n6",
+  "n": 6,
+  "k": 8,
+  "expected": 30,
+  "exact_digits": 2,
+  "note": "n=6, mật độ 30%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_16_n7",
+  "n": 7,
+  "k": 23,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=7, mật độ 45%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_17_n8",
+  "n": 8,
+  "k": 37,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=8, mật độ 60%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_18_n3",
+  "n": 3,
+  "k": 0,
+  "expected": 6,
+  "exact_digits": 1,
+  "note": "n=3, mật độ 0%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_19_n4",
+  "n": 4,
+  "k": 4,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=4, mật độ 10%, không giữ trống 2 đầu"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_20_n5",
+  "n": 5,
+  "k": 6,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=5, mật độ 20%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_21_n6",
+  "n": 6,
+  "k": 14,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=6, mật độ 30%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_22_n7",
+  "n": 7,
+  "k": 15,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=7, mật độ 45%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_23_n8",
+  "n": 8,
+  "k": 39,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=8, mật độ 60%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_24_n3",
+  "n": 3,
+  "k": 0,
+  "expected": 6,
+  "exact_digits": 1,
+  "note": "n=3, mật độ 0%, không giữ trống 2 đầu"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_25_n4",
+  "n": 4,
+  "k": 0,
+  "expected": 20,
+  "exact_digits": 2,
+  "note": "n=4, mật độ 10%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_26_n5",
+  "n": 5,
+  "k": 7,
+  "expected": 2,
+  "exact_digits": 1,
+  "note": "n=5, mật độ 20%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_27_n6",
+  "n": 6,
+  "k": 7,
+  "expected": 21,
+  "exact_digits": 2,
+  "note": "n=6, mật độ 30%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_28_n7",
+  "n": 7,
+  "k": 22,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=7, mật độ 45%"
+ },
+ {
+  "group": "03_nho",
+  "name": "nho_29_n8",
+  "n": 8,
+  "k": 41,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "n=8, mật độ 60%, không giữ trống 2 đầu"
+ },
+ {
+  "group": "04_lon",
+  "name": "n1000_d0",
+  "n": 1000,
+  "k": 0,
+  "expected": 965601742,
+  "exact_digits": 600,
+  "note": "lớn: n=1000, mật độ 0%"
+ },
+ {
+  "group": "04_lon",
+  "name": "n1000_d1",
+  "n": 1000,
+  "k": 10164,
+  "expected": 48806212,
+  "exact_digits": 590,
+  "note": "lớn: n=1000, mật độ 1%"
+ },
+ {
+  "group": "04_lon",
+  "name": "n1000_d5",
+  "n": 1000,
+  "k": 49631,
+  "expected": 559736265,
+  "exact_digits": 555,
+  "note": "lớn: n=1000, mật độ 5%"
+ },
+ {
+  "group": "04_lon",
+  "name": "n1000_d10",
+  "n": 1000,
+  "k": 100387,
+  "expected": 436436382,
+  "exact_digits": 504,
+  "note": "lớn: n=1000, mật độ 10%"
+ },
+ {
+  "group": "04_lon",
+  "name": "n1000_d20",
+  "n": 1000,
+  "k": 200089,
+  "expected": 467196463,
+  "exact_digits": 396,
+  "note": "lớn: n=1000, mật độ 20%"
+ },
+ {
+  "group": "04_lon",
+  "name": "n1000_d30",
+  "n": 1000,
+  "k": 299905,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "lớn: n=1000, mật độ 30%"
+ },
+ {
+  "group": "04_lon",
+  "name": "n1000_d45",
+  "n": 1000,
+  "k": 450365,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "lớn: n=1000, mật độ 45%"
+ },
+ {
+  "group": "04_lon",
+  "name": "n500_d10",
+  "n": 500,
+  "k": 25034,
+  "expected": 630589587,
+  "exact_digits": 252,
+  "note": "lớn: n=500, mật độ 10%"
+ },
+ {
+  "group": "04_lon",
+  "name": "n750_d5",
+  "n": 750,
+  "k": 28337,
+  "expected": 910565742,
+  "exact_digits": 415,
+  "note": "lớn: n=750, mật độ 5%"
+ },
+ {
+  "group": "04_lon",
+  "name": "n999_d15",
+  "n": 999,
+  "k": 149624,
+  "expected": 442541780,
+  "exact_digits": 451,
+  "note": "lớn: n=999, mật độ 15%"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "khong_chot_n10",
+  "n": 10,
+  "k": 0,
+  "expected": 48620,
+  "exact_digits": 5,
+  "note": "không chốt ⇒ C(18,9)"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "khong_chot_n20_vuot_mod",
+  "n": 20,
+  "k": 0,
+  "expected": 345263555,
+  "exact_digits": 11,
+  "note": "C(38,19) = 35 345 263 800 > 10⁹+7 ⇒ kiểm tra lấy dư"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "khong_chot_n100",
+  "n": 100,
+  "k": 0,
+  "expected": 690285631,
+  "exact_digits": 59,
+  "note": "không chốt ⇒ C(198,99) mod p"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "hanh_lang_n50",
+  "n": 50,
+  "k": 2401,
+  "expected": 1,
+  "exact_digits": 1,
+  "note": "chỉ còn đúng 1 đường"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "vien_n30",
+  "n": 30,
+  "k": 784,
+  "expected": 2,
+  "exact_digits": 1,
+  "note": "chỉ đi được trên viền ⇒ đúng 2 đường"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "bac_thang_n40",
+  "n": 40,
+  "k": 1482,
+  "expected": 755810045,
+  "exact_digits": 12,
+  "note": "dải hẹp quanh đường chéo"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "ban_co_n9",
+  "n": 9,
+  "k": 40,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "bàn cờ ⇒ 0 (mọi bước đều vào ô chốt)"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "me_cung_rang_cua_n31",
+  "n": 31,
+  "k": 300,
+  "expected": 0,
+  "exact_digits": 1,
+  "note": "mê cung nhiều ngõ cụt"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "dong_chot_1_khe_n200",
+  "n": 200,
+  "k": 199,
+  "expected": 99852296,
+  "exact_digits": 118,
+  "note": "n=200, chỉ 1 khe qua đường chéo"
+ },
+ {
+  "group": "05_dac_biet",
+  "name": "it_chot_n1000",
+  "n": 1000,
+  "k": 480,
+  "expected": 699861005,
+  "exact_digits": 600,
+  "note": "n=1000 nhưng rất ít chốt (bao hàm–loại trừ có lợi)"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "rong",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errEmpty",
+  "note": "errEmpty"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "n_khong_phai_so",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errNNotInt",
+  "note": "errNNotInt"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "n_am",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errNNotInt",
+  "note": "errNNotInt"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "n_bang_0",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errNRange",
+  "note": "errNRange"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "n_vuot_1000",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errNRange",
+  "note": "errNRange"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "thieu_dong",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errRowCount",
+  "note": "errRowCount"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "thua_dong",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errRowCount",
+  "note": "errRowCount"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "dong_ngan",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errRowLen",
+  "note": "errRowLen"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "dong_dai",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errRowLen",
+  "note": "errRowLen"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "ky_tu_la",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errBadChar",
+  "note": "errBadChar"
+ },
+ {
+  "group": "06_khong_hop_le",
+  "name": "so_thuc",
+  "n": null,
+  "k": null,
+  "expected": "INVALID errNNotInt",
+  "note": "errNNotInt"
+ }
+]

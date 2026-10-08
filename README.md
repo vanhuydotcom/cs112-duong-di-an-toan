@@ -1,15 +1,16 @@
 # Đường đi an toàn — Bài tập lớn CS112 (Đinh Văn Huy – 25730032)
 
-**Demo online: https://vanhuydotcom.github.io/cs112-duong-di-an-toan/**
+**Demo online:** https://vanhuydotcom.github.io/cs112-duong-di-an-toan/
 
-Demo web trực quan hóa quy hoạch động đếm số đường đi an toàn trên lưới n×n.
+Demo web trực quan hóa và so sánh 4 cách giải bài đếm đường đi an toàn trên lưới n×n
+(vét cạn quay lui, đệ quy có nhớ, QHĐ bottom-up, tổ hợp + bao hàm–loại trừ).
 
-| Thành phần | Đường dẫn |
+| Thư mục | Nội dung |
 |---|---|
-| Giao diện web | `app/index.html` (+ `app/core.js`) |
-| Lời giải nộp WeCode | `solution/safe_path.py` |
-| Kiểm thử | `tests/run_tests.py` |
-| Video demo | `video/demo_khong_tieng.mp4` (không tiếng, phụ đề + rọi sáng; tạo lại: `python3 video/make_silent_video.py`), `video/demo_HoaiMy.mp4`, `video/demo_NamMinh.mp4` (có thuyết minh: `python3 video/make_video.py HoaiMy`) |
-| Report | `report/report.pdf` (nguồn `report/report.tex`, biên dịch: `tectonic report.tex`) |
+| `1_SourceCode/` | `app/` demo web (mở `app/index.html`), `solution/safe_path.py` lời giải nộp WeCode, `tools/` script quay video & chụp ảnh |
+| `2_VideoDemo/` | `demo.mp4` — video demo không lời (phụ đề + rọi sáng), ~3 phút 20 giây |
+| `3_Testcase/` | 103 test (`.inp`/`.out`) chia 6 nhóm, `gen_tests.py` sinh test, `run_tests.py` chạy test, `ket_qua/` kết quả |
+| `4_Report/` | `report.pdf`, nguồn `report.tex` (biên dịch: `tectonic report.tex`) |
 
-Chạy app: mở `app/index.html` bằng trình duyệt, hoặc `python3 -m http.server -d app` rồi vào http://localhost:8000.
+Chạy demo cục bộ: `python3 -m http.server -d 1_SourceCode/app` rồi mở http://localhost:8000
+Chạy toàn bộ test: `python3 3_Testcase/run_tests.py`

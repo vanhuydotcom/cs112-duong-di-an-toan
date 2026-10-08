@@ -1,0 +1,39 @@
+\newcommand{\ExMap}{\begin{tabular}{c|cccccc}
+ & 1 & 2 & 3 & 4 & 5 & 6\\\hline
+1 & KTX & . & . & . & . & .\\
+2 & . & \textbf{*} & . & . & . & .\\
+3 & . & . & . & \textbf{*} & . & .\\
+4 & \textbf{*} & . & . & . & . & .\\
+5 & . & . & \textbf{*} & . & . & .\\
+6 & . & . & . & . & . & UIT\\
+\end{tabular}}
+\newcommand{\ExTable}{\begin{tabular}{c|cccccc}
+$dp$ & 1 & 2 & 3 & 4 & 5 & 6\\\hline
+1 & 1 & 1 & 1 & 1 & 1 & 1\\
+2 & 1 & \cellcolor{red!12}0 & 1 & 2 & 3 & 4\\
+3 & 1 & 1 & 2 & \cellcolor{red!12}0 & 3 & 7\\
+4 & \cellcolor{red!12}0 & 1 & 3 & 3 & 6 & 13\\
+5 & 0 & 1 & \cellcolor{red!12}0 & 3 & 9 & 22\\
+6 & 0 & 1 & 1 & 4 & 13 & \cellcolor{yellow!35}\textbf{35}\\
+\end{tabular}}
+\newcommand{\ExRows}{\begin{longtable}{>{\centering\arraybackslash}p{0.8cm} >{\raggedright\arraybackslash}p{9.2cm} >{\centering\arraybackslash}p{4.3cm}}
+\toprule
+Hàng & Các thao tác trên mảng $dp[1..6]$ & $dp$ sau hàng\\\midrule\endhead
+-- & Khởi tạo & $[1,0,0,0,0,0]$\\\midrule
+1 & $dp[1]=1$ (KTX); $dp[2]\leftarrow 0+1=1$; $dp[3]\leftarrow 0+1=1$; $dp[4]\leftarrow 0+1=1$; $dp[5]\leftarrow 0+1=1$; $dp[6]\leftarrow 0+1=1$ & $[1,1,1,1,1,1]$\\\midrule
+2 & $dp[1]$ giữ 1; $dp[2]\leftarrow 0$ (chốt); $dp[3]\leftarrow 1+0=1$; $dp[4]\leftarrow 1+1=2$; $dp[5]\leftarrow 1+2=3$; $dp[6]\leftarrow 1+3=4$ & $[1,0,1,2,3,4]$\\\midrule
+3 & $dp[1]$ giữ 1; $dp[2]\leftarrow 0+1=1$; $dp[3]\leftarrow 1+1=2$; $dp[4]\leftarrow 0$ (chốt); $dp[5]\leftarrow 3+0=3$; $dp[6]\leftarrow 4+3=7$ & $[1,1,2,0,3,7]$\\\midrule
+4 & $dp[1]\leftarrow 0$ (chốt); $dp[2]\leftarrow 1+0=1$; $dp[3]\leftarrow 2+1=3$; $dp[4]\leftarrow 0+3=3$; $dp[5]\leftarrow 3+3=6$; $dp[6]\leftarrow 7+6=13$ & $[0,1,3,3,6,13]$\\\midrule
+5 & $dp[1]$ giữ 0; $dp[2]\leftarrow 1+0=1$; $dp[3]\leftarrow 0$ (chốt); $dp[4]\leftarrow 3+0=3$; $dp[5]\leftarrow 6+3=9$; $dp[6]\leftarrow 13+9=22$ & $[0,1,0,3,9,22]$\\\midrule
+6 & $dp[1]$ giữ 0; $dp[2]\leftarrow 1+0=1$; $dp[3]\leftarrow 0+1=1$; $dp[4]\leftarrow 3+1=4$; $dp[5]\leftarrow 9+4=13$; $dp[6]\leftarrow 22+13=35$ & $[0,1,1,4,13,35]$\\\midrule
+\bottomrule\end{longtable}}
+\newcommand{\ExIE}{\begin{longtable}{c c >{\raggedright\arraybackslash}p{9.6cm} c}
+\toprule
+Bước & Điểm & Công thức & $g$\\\midrule\endhead
+1 & \#1\,(2,2) & $\binom{2}{1} = 2$ & 2\\
+2 & \#2\,(3,4) & $\binom{5}{2} - g_{1}\cdot\binom{3}{1} = 10 - 2\cdot 3$ & 4\\
+3 & \#3\,(4,1) & $\binom{3}{3} = 1$ & 1\\
+4 & \#4\,(5,3) & $\binom{6}{4} - g_{1}\cdot\binom{4}{3} - g_{3}\cdot\binom{3}{1} = 15 - 2\cdot 4 - 1\cdot 3$ & 4\\
+5 & UIT (6,6) & $\binom{10}{5} - g_{1}\cdot\binom{8}{4} - g_{2}\cdot\binom{5}{3} - g_{3}\cdot\binom{7}{2} - g_{4}\cdot\binom{4}{1} = 252 - 2\cdot 70 - 4\cdot 10 - 1\cdot 21 - 4\cdot 4$ & \textbf{35}\\
+\bottomrule\end{longtable}}
+\newcommand{\ExOpsBrute}{146}\newcommand{\ExOpsMemo}{63}\newcommand{\ExOpsDp}{36}\newcommand{\ExOpsIe}{22}\newcommand{\ExHits}{13}\newcommand{\ExCalls}{63}\newcommand{\ExDepth}{11}
