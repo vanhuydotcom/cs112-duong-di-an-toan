@@ -300,7 +300,7 @@ Chuyển sang lưới lớn vẫn còn nhật ký của lưới cũ & Xóa nhậ
   \item \textbf{Vòng 1:} AI viết script Playwright điều khiển Chrome theo kịch bản và thuyết minh bằng giọng ``Linh'' của macOS. \emph{Lỗi:} video bị một dải xám ở đáy. AI dùng một trang thử có dải màu chuyển để đo, phát hiện Chrome headless chỉ vẽ $\approx$ (chiều cao $-$ 86px), bèn cắt video và đẩy phụ đề lên.
   \item \textbf{Vòng 2:} em nhận xét giọng đọc ``nghe kinh quá''. AI đổi sang giọng neural tiếng Việt (thư viện \texttt{edge-tts}). \emph{Lỗi:} lần gọi đầu báo \texttt{NoAudioReceived} do mạng chập chờn; AI thêm cơ chế thử lại.
   \item \textbf{Vòng 3:} em muốn video không lời mà người xem vẫn hiểu. AI làm chế độ ``rọi đèn'' (làm tối mọi thứ trừ vùng đang nói tới), thẻ tiêu đề chia chương, phụ đề hiện theo độ dài chữ.
-  \item \textbf{Vòng 4:} em góp ý video chậm và cần con trỏ chỉ vào vùng khoanh. AI tăng tốc (khoảng 17 ký tự/giây, người xem có thể tạm dừng) và thêm con trỏ mũi tên di chuyển tới vùng rọi sáng, có hiệu ứng ``chạm''.
+  \item \textbf{Vòng 4:} em góp ý video chậm và cần con trỏ chỉ vào vùng khoanh. AI tăng tốc (khoảng 12 ký tự/giây, người xem có thể tạm dừng) và thêm con trỏ mũi tên di chuyển tới vùng rọi sáng, có hiệu ứng ``chạm''.
 \end{enumerate}
 Bản nộp là video không lời (\texttt{2\_VideoDemo/demo.mp4}), đúng với hướng dẫn cô cho phép ``hiện text hoặc video không lời''.
 
@@ -472,7 +472,7 @@ DoAn_DuongDiAnToan/
     app/index.html, app/core.js   demo web + 4 thuat toan
     solution/safe_path.py         loi giai nop WeCode
     tools/                        script quay video, chup anh
-  2_VideoDemo/demo.mp4            video demo khong loi (~3 phut 20 giay)
+  2_VideoDemo/demo.mp4            video demo khong loi (~4 phut 40 giay)
   3_Testcase/
     01_thong_thuong/ ... 06_khong_hop_le/   103 test (.inp/.out)
     gen_tests.py, run_tests.py, run_js.js, manifest.json

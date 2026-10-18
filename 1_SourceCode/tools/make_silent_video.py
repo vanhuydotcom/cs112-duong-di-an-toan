@@ -1,7 +1,7 @@
 """Video demo KHÔNG lồng tiếng: người xem hiểu nhờ
   - thẻ tiêu đề chia chương,
   - vùng đang nói tới được "rọi đèn" (phần còn lại tối đi, viền vàng),
-  - phụ đề ngắn, hiển thị đủ lâu theo độ dài chữ (~17 ký tự/giây; muốn xem kỹ thì tạm dừng video).
+  - phụ đề ngắn, hiển thị đủ lâu theo độ dài chữ (~12 ký tự/giây; muốn xem kỹ thì tạm dừng video).
 Chạy: python3 1_SourceCode/tools/make_silent_video.py  →  2_VideoDemo/demo.mp4"""
 import json
 import subprocess
@@ -34,7 +34,7 @@ SCENES = [
   ("Mã giả tô vàng dòng đang chạy, nhật ký bên dưới ghi lại từng phép tính.",
    "", "#vizCard", "document.getElementById('code')", 0),
   ("Bấm ▶ Chạy để xem toàn bộ quá trình. Có thể lùi/tiến từng bước bằng phím ← →.",
-   "document.getElementById('speed').value=6; demo.go(5); demo.play()", "#vizCard", "document.getElementById('board').closest('div').parentElement", 1.6),
+   "document.getElementById('speed').value=4; demo.go(5); demo.play()", "#vizCard", "document.getElementById('board').closest('div').parentElement", 1.6),
   ("Kết quả: dp[4][4] = 3 → có 3 đường đi an toàn.",
    "demo.stop(); demo.go(demo.steps()-1)", "#vizCard", "document.querySelector('#board .cell[data-i=\"3\"][data-j=\"3\"]')", 0),
   ("Chế độ mảng 1 chiều = đúng code nộp WeCode: dp[j] cũ là ô phía trên, dp[j-1] vừa cập nhật là ô bên trái ⇒ bộ nhớ chỉ O(n).",
@@ -133,7 +133,7 @@ OVERLAY_JS = """
 
 
 def read_time(text):
-  return max(2.6, len(text) / 17 + 0.9)
+  return max(4.0, len(text) / 12 + 1.8)
 
 
 def main():
@@ -154,7 +154,7 @@ def main():
       if sc[0] == "card":
         page.evaluate("spotOn(null); demo.caption('')")
         page.evaluate(f"showCard({json.dumps(sc[1])}, {json.dumps(sc[2])})")
-        page.wait_for_timeout(int(max(1.9, len(sc[2]) / 24 + 1.1) * 1000))
+        page.wait_for_timeout(int(max(2.8, len(sc[2]) / 18 + 1.6) * 1000))
         page.evaluate("showCard('', '')")
         page.wait_for_timeout(350)
         continue

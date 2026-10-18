@@ -8,7 +8,7 @@ Demo web trực quan hóa và so sánh 4 cách giải bài đếm đường đi 
 | Thư mục | Nội dung |
 |---|---|
 | `1_SourceCode/` | `app/` demo web (mở `app/index.html`), `solution/safe_path.py` lời giải nộp WeCode, `tools/` script quay video & chụp ảnh |
-| `2_VideoDemo/` | `demo.mp4` — video demo không lời (phụ đề + rọi sáng), ~3 phút 20 giây |
+| `2_VideoDemo/` | `demo.mp4` — video demo không lời (phụ đề + rọi sáng), ~4 phút 40 giây |
 | `3_Testcase/` | 103 test (`.inp`/`.out`) chia 6 nhóm, `gen_tests.py` sinh test, `run_tests.py` chạy test, `ket_qua/` kết quả |
 | `4_Report/` | `report.pdf`, nguồn `report.tex` (biên dịch: `tectonic report.tex`) |
 
