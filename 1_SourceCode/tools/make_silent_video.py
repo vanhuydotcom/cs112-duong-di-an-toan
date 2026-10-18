@@ -127,7 +127,7 @@ OVERLAY_JS = """
       document.body.appendChild(d); setTimeout(() => d.remove(), 800);
     }, 750);
   };
-  window.showCard = (t, s) => { card.querySelector('h1').textContent = t; card.querySelector('p').textContent = s; card.style.opacity = t ? 1 : 0; };
+  window.showCard = (t, s) => { if (t) { card.querySelector('h1').textContent = t; card.querySelector('p').textContent = s; } void card.offsetWidth; card.style.opacity = t ? 1 : 0; };
 })();
 """
 
@@ -149,6 +149,8 @@ def main():
     page.reload()
     page.add_style_tag(content=OVERLAY_CSS)
     page.evaluate(OVERLAY_JS)
+    page.evaluate(f"showCard({json.dumps(SCENES[0][1])}, {json.dumps(SCENES[0][2])})")
+    page.wait_for_timeout(800)
     real_h = (H - 86) // 2 * 2  # Chrome headless chỉ vẽ ~H-86px khi quay (xem make_video.py)
     for sc in SCENES:
       if sc[0] == "card":
@@ -177,7 +179,8 @@ def main():
     browser.close()
   httpd.shutdown()
   out = HERE.parent.parent / "2_VideoDemo" / "demo.mp4"
-  subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(vid), "-vf", f"crop={W}:{real_h}:0:0",
+  # -ss 1.0: bỏ 1 giây đầu lúc trang đang tải
+  subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", "1.0", "-i", str(vid), "-vf", f"crop={W}:{real_h}:0:0",
                   "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "22", "-an", str(out)], check=True)
   print(f"OK → {out}  ({total:.0f}s)")
 
